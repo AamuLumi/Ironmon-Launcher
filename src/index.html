@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html class="w-full h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline';">
+    <link href="./styles/dist/output.css" rel="stylesheet">
+    <title>Ironman Launcher</title>
+    <script src="./scripts/downloadManager.js" type="text/javascript"></script>
+    <script src="./scripts/wizardManager.js" type="text/javascript"></script>
+    <script src="./scripts/locationManager.js" type="text/javascript"></script>
+    <script src="./scripts/romManager.js" type="text/javascript"></script>
+    <script src="./scripts/pageManager.js" type="text/javascript"></script>
+</head>
+
+<body class="bg-gradient-to-br from-cyan-900 to-slate-900 w-full h-full text-slate-200 overflow-hidden">
+    <div class="overflow-y-auto h-full">
+        <div id="initial-setup" class="hidden flex flex-col justify-around h-full">
+            <h1 class="text-4xl font-bold text-center text-white py-8">Initial setup</h1>
+
+            <div id="step-1" class="px-4 py-8 flex flex-row items-center">
+                <div class="flex flex-col items-center w-1/3 min-w-[33%]">
+                    <button
+                        class="bg-indigo-500 px-4 py-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300"
+                        onclick="loadPage('softwares-location')">Locate or download tools</button>
+                </div>
+                <div class="px-4">
+                    <div class="font-semibold">
+                        Ironmon Launcher needs Pokemon Randomizer ZX to generate ROMs, Bizhawk to run ROMs and Ironmon
+                        Tracker to help you during runs.
+                    </div>
+                    <div class="flex flex-row mt-2">
+                        <div id="step-1-valid" class="bg-green-700 font-semibold px-2 py-1 rounded-sm hidden">Completed
+                        </div>
+                        <div id="step-1-missing-files" class="bg-red-700 font-semibold px-2 py-1 rounded-sm hidden">
+                            Missing files</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="step-2" class="px-4 py-8 flex flex-row items-center">
+                <div class="flex flex-col items-center w-1/3 min-w-[33%]">
+                    <button
+                        class="bg-indigo-500 px-4 py-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300"
+                        onclick="loadPage('roms-location')">Locate ROMs</button>
+                </div>
+                <div class="px-4">
+                    <div class="font-semibold">
+                        Ironmon Launcher needs original Pokemon ROMs to create randomized ROMs. We don't provide any
+                        ROMs
+                        with
+                        the Launcher.
+                    </div>
+                    <div class="flex flex-row mt-2">
+                        <div id="step-2-valid" class="bg-green-700 font-semibold px-2 py-1 rounded-sm hidden">Completed
+                        </div>
+                        <div id="step-2-missing-files" class="bg-red-700 font-semibold px-2 py-1 rounded-sm hidden">
+                            Need at least one rom</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="step-3" class="px-4 py-8 flex flex-row items-center">
+                <div class="flex flex-col items-center w-1/3 min-w-[33%]">
+                    <button
+                        class="bg-indigo-500 px-4 py-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300"
+                        onclick="loadPage('settings')">Open settings</button>
+                </div>
+                <div class="px-4">
+                    <div class="font-semibold">
+                        Totally optional step, but maybe you want to set some things to have a better experience.
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-4 py-8 flex flex-row items-center justify-center">
+                <button id="validate-wizard-button"
+                    class="bg-indigo-500 px-8 py-2 text-white text-2xl font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300 disabled:bg-slate-900 disabled:text-slate-500 disabled:border-slate-900"
+                    onclick="loadPage('dashboard')">Here we go !</button>
+            </div>
+        </div>
+
+        <div id="download-screen" class="hidden">
+            <div class="flex flex-row py-4 px-4 items-center">
+                <button onclick="goBack()"
+                    class="bg-indigo-500 px-4 py-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                    &lt; Back</button>
+                <h1 class="font-bold text-center text-white px-4 text-2xl">Downloading tools</h1>
+            </div>
+
+            <div class="flex flex-col px-4">
+                <div class="bg-slate-900 px-4 py-4 rounded-md my-2">
+                    <div class="flex flex-row justify-between">
+                        <div class="font-semibold text-xl">Pokemon Randomizer DX</div>
+
+                        <button onclick="download()"
+                            class="bg-indigo-500 px-4 py-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                            Download</button>
+                    </div>
+
+                    <div class="font-semibold">Download link used</div>
+                    <div class="text-sm">
+                        https://github.com/Ajarmar/universal-pokemon-randomizer-zx/releases/download/v4.6.0/PokeRandoZX-v4_6_0.zip
+                    </div>
+
+                    <div class="w-full mt-4 text-sm font-bold">
+                        Downloading file
+                    </div>
+                    <progress class="w-full" />
+                </div>
+
+                <div class="bg-slate-900 px-4 py-4 rounded-md my-2">
+                    <div class="flex flex-row justify-between">
+                        <div class="font-semibold text-xl">Pokemon Randomizer DX</div>
+
+                        <button onclick="download()"
+                            class="bg-indigo-500 px-4 py-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                            Download</button>
+                    </div>
+
+                    <div class="font-semibold">Download link used</div>
+                    <div class="text-sm">
+                        https://github.com/Ajarmar/universal-pokemon-randomizer-zx/releases/download/v4.6.0/PokeRandoZX-v4_6_0.zip
+                    </div>
+
+                    <progress class="w-full mt-4" />
+                </div>
+            </div>
+        </div>
+
+        <div id="softwares-location" class="hidden">
+            <div class="flex flex-row py-4 px-4 items-center justify-between">
+                <div class="flex flex-row items-center">
+                    <button onclick="goBack()"
+                        class="bg-indigo-500 px-4 py-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                        &lt; Back</button>
+                    <h1 class="font-bold text-center text-white px-4 text-2xl">Softwares locations</h1>
+                </div>
+
+                <button onclick="downloadAll()"
+                    class="bg-indigo-500 px-4 py-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                    Download all</button>
+            </div>
+
+            <div class="flex flex-col px-4">
+                <div class="bg-slate-900 px-4 py-4 rounded-md my-2">
+                    <div class="flex flex-row justify-between items-start">
+                        <div>
+                            <div class="font-semibold text-xl">Pokemon Randomizer DX</div>
+                            <div class="mb-2">File needed : PokeRandoZX.jar</div>
+                        </div>
+
+                        <button onclick="download(FILE_LOCATIONS.POKEMON_RANDOMIZER, URLS.POKEMON_RANDOMIZER)"
+                            class="bg-indigo-500 px-4 py-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                            Download</button>
+                    </div>
+
+                    <label for="location-pokemon-randomizer"
+                        class="cursor-pointer px-4 py-1 text-white font-semibold rounded-sm border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                        No file
+                    </label>
+                    <input class="hidden" id="location-pokemon-randomizer" type="file"
+                        onChange="setLocation(FILE_LOCATIONS.POKEMON_RANDOMIZER, this)" accept=".jar" />
+
+                    <div class="font-semibold mt-4">Download link used</div>
+                    <div class="text-sm">
+                        https://github.com/Ajarmar/universal-pokemon-randomizer-zx/releases/download/v4.6.0/PokeRandoZX-v4_6_0.zip
+                    </div>
+
+                    <div id="download-text-pokemon-randomizer" class="w-full mt-4 text-sm font-bold hidden">
+                        Downloading file
+                    </div>
+                    <progress id="download-bar-pokemon-randomizer" class="w-full hidden" />
+                </div>
+
+                <div class="bg-slate-900 px-4 py-4 rounded-md my-2">
+                    <div class="flex flex-row justify-between items-start">
+                        <div>
+                            <div class="font-semibold text-xl2">Bizhawk</div>
+                            <div class="mb-2">File needed : EmuHawk.exe</div>
+                        </div>
+
+                        <button onclick="download(FILE_LOCATIONS.BIZHAWK, URLS.BIZHAWK)"
+                            class="bg-indigo-500 px-4 py-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                            Download</button>
+                    </div>
+
+
+                    <label for="location-bizhawk"
+                        class="cursor-pointer px-4 py-1 text-white font-semibold rounded-sm border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                        No file
+                    </label>
+                    <input class="hidden" id="location-bizhawk" type="file"
+                        onChange="setLocation(FILE_LOCATIONS.BIZHAWK, this)" accept=".exe" />
+
+                    <div class="font-semibold mt-4">Download link used</div>
+                    <div class="text-sm">
+                        https://github.com/TASEmulators/BizHawk/releases/download/2.9/BizHawk-2.9-win-x64.zip
+                    </div>
+
+                    <div id="download-text-bizhawk" class="w-full mt-4 text-sm font-bold hidden">
+                        Downloading file
+                    </div>
+                    <progress id="download-bar-bizhawk" class="w-full hidden" />
+                </div>
+
+                <div class="bg-slate-900 px-4 py-4 rounded-md my-2">
+                    <div class="flex flex-row justify-between items-start">
+                        <div>
+                            <div class="font-semibold text-xl">Ironmon Tracker (1G - 2G - 3G)</div>
+                            <div class="mb-2">File needed : Ironmon-Tracker.lua</div>
+                        </div>
+
+                        <button onclick="download(FILE_LOCATIONS.TRACKER_3G, URLS.TRACKER_3G)"
+                            class="bg-indigo-500 px-4 py-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                            Download</button>
+                    </div>
+
+                    <label for="location-tracker-3g"
+                        class="cursor-pointer px-4 py-1 text-white font-semibold rounded-sm border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                        No file
+                    </label>
+                    <input class="hidden" id="location-tracker-3g" type="file"
+                        onChange="setLocation(FILE_LOCATIONS.TRACKER_3G, this)" accept=".lua" />
+
+                    <div class="font-semibold mt-4">Download link used</div>
+                    <div class="text-sm">
+                        https://github.com/besteon/Ironmon-Tracker/releases/download/v7.5.3/Ironmon-Tracker.zip
+                    </div>
+
+                    <div id="download-text-tracker-3g" class="w-full mt-4 text-sm font-bold hidden">
+                        Downloading file
+                    </div>
+                    <progress id="download-bar-tracker-3g" class="w-full hidden" />
+                </div>
+
+                <div class="bg-slate-900 px-4 py-4 rounded-md my-2">
+                    <div class="flex flex-row justify-between items-start">
+                        <div>
+                            <div class="font-semibold text-xl">Ironmon Tracker (4G +)</div>
+                            <div class="mb-2">File needed : Ironmon-Tracker.lua</div>
+                        </div>
+
+                        <button onclick="download(FILE_LOCATIONS.TRACKER_4G, URLS.TRACKER_4G)"
+                            class="bg-indigo-500 px-4 py-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                            Download</button>
+                    </div>
+
+
+                    <label for="location-tracker-4g"
+                        class="cursor-pointer px-4 py-1 text-white font-semibold rounded-sm border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                        No file
+                    </label>
+                    <input class="hidden" id="location-tracker-4g" type="file"
+                        onChange="setLocation(FILE_LOCATIONS.TRACKER_4G, this)" accept=".lua" />
+
+                    <div class="font-semibold mt-4">Download link used</div>
+                    <div class="text-sm">
+                        https://github.com/Brian0255/NDS-Ironmon-Tracker/releases/download/5.5.2/NDS-Ironmon-Tracker-5.5.2.zip
+                    </div>
+
+                    <div id="download-text-tracker-4g" class="w-full mt-4 text-sm font-bold hidden">
+                        Downloading file
+                    </div>
+                    <progress id="download-bar-tracker-4g" class="w-full hidden" />
+                </div>
+            </div>
+        </div>
+
+        <div id="roms-location" class="hidden flex flex-col">
+            <div class="flex flex-row py-4 px-4 items-center">
+                <button onclick="goBack()"
+                    class="bg-indigo-500 px-4 py-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                    &lt; Back</button>
+                <h1 class="font-bold text-center text-white px-4 text-2xl">ROMs locations</h1>
+            </div>
+
+            <div class="flex flex-col px-4">
+                <div class="bg-slate-900 px-4 py-4 rounded-md my-2">
+                    <div class="font-semibold text-xl mb-2">[1G+] Fire Red / Leaf Green</div>
+                    <label for="rom-frlg"
+                        class="cursor-pointer px-4 py-1 text-white font-semibold rounded-sm border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                        No file
+                    </label>
+                    <input class="hidden" id="rom-frlg" type="file" onChange="setRom(ROM_LOCATIONS.FRLG, this)"
+                        accept=".gba" />
+                </div>
+
+                <div class="bg-slate-900 px-4 py-4 rounded-md my-2">
+                    <div class="font-semibold text-xl mb-2">[2G+] Heart Gold / Soul Silver</div>
+
+                    <label for="rom-hgss"
+                        class="cursor-pointer px-4 py-1 text-white font-semibold rounded-sm border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                        No file
+                    </label>
+                    <input class="hidden" id="rom-hgss" type="file" onChange="setRom(ROM_LOCATIONS.HGSS, this)"
+                        accept=".nds" />
+                </div>
+
+                <div class="bg-slate-900 px-4 py-4 rounded-md my-2">
+                    <div class="font-semibold text-xl mb-2">[3G] Ruby / Sapphire / Emerald</div>
+
+                    <label for="rom-rse"
+                        class="cursor-pointer px-4 py-1 text-white font-semibold rounded-sm border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                        No file
+                    </label>
+                    <input class="hidden" id="rom-rse" type="file" onChange="setRom(ROM_LOCATIONS.RSE, this)"
+                        accept=".gba" />
+                </div>
+
+                <div class="bg-slate-900 px-4 py-4 rounded-md my-2">
+                    <div class="font-semibold text-xl mb-2">[3G+] Omega Ruby / Alpha Sapphire</div>
+
+                    <label for="rom-oras"
+                        class="cursor-pointer px-4 py-1 text-white font-semibold rounded-sm border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                        No file
+                    </label>
+                    <input class="hidden" id="rom-oras" type="file" onChange="setRom(ROM_LOCATIONS.ORAS, this)"
+                        accept=".3ds" />
+                </div>
+
+                <div class="bg-slate-900 px-4 py-4 rounded-md my-2">
+                    <div class="font-semibold text-xl mb-2">[4G] Diamond / Pearl / Platinum</div>
+
+                    <label for="rom-dpp"
+                        class="cursor-pointer px-4 py-1 text-white font-semibold rounded-sm border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                        No file
+                    </label>
+                    <input class="hidden" id="rom-dpp" type="file" onChange="setRom(ROM_LOCATIONS.DPP, this)"
+                        accept=".nds" />
+                </div>
+
+                <div class="bg-slate-900 px-4 py-4 rounded-md my-2">
+                    <div class="font-semibold text-xl mb-2">[5G] Black / White</div>
+
+                    <label for="rom-bw"
+                        class="cursor-pointer px-4 py-1 text-white font-semibold rounded-sm border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                        No file
+                    </label>
+                    <input class="hidden" id="rom-bw" type="file" onChange="setRom(ROM_LOCATIONS.BW, this)"
+                        accept=".nds" />
+                </div>
+
+                <div class="bg-slate-900 px-4 py-4 rounded-md my-2">
+                    <div class="font-semibold text-xl mb-2">[5G] Black 2 / White 2</div>
+
+                    <label for="rom-b2w2"
+                        class="cursor-pointer px-4 py-1 text-white font-semibold rounded-sm border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                        No file
+                    </label>
+                    <input class="hidden" id="rom-b2w2" type="file" onChange="setRom(ROM_LOCATIONS.B2W2, this)"
+                        accept=".nds" />
+                </div>
+
+
+                <div class="bg-slate-900 px-4 py-4 rounded-md my-2">
+                    <div class="font-semibold text-xl mb-2">[6G] X / Y</div>
+
+                    <label for="rom-xy"
+                        class="cursor-pointer px-4 py-1 text-white font-semibold rounded-sm border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300">
+                        No file
+                    </label>
+                    <input class="hidden" id="rom-xy" type="file" onChange="setRom(ROM_LOCATIONS.XY, this)"
+                        accept=".3ds" />
+                </div>
+            </div>
+        </div>
+
+        <div id="dashboard" class="hidden">
+            <div class="flex flex-row py-4 px-4 items-center justify-between">
+                <h1 class="font-bold text-center text-white text-2xl">Let's start a new run !</h1>
+
+                <select>
+                    <option>Pokemon 1</option>
+                </select>
+            </div>
+
+            <div class="flex flex-row justify-between">
+                <div class="flex flex-col px-4 grow">
+                    <div class="font-semibold">
+                        Useful links
+                    </div>
+                    <button
+                        class="bg-indigo-500 px-4 py-1 my-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300"
+                        onclick="loadPage('softwares-location')">Rules</button>
+                    <button
+                        class="bg-indigo-500 px-4 py-1 my-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300"
+                        onclick="loadPage('softwares-location')">Hidden items</button>
+                    <button
+                        class="bg-indigo-500 px-4 py-1 my-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300"
+                        onclick="loadPage('softwares-location')">Walkthrough</button>
+
+                </div>
+                <div>
+
+                </div>
+                <div class="flex flex-col px-4 grow">
+                    <div class="font-semibold">Settings</div>
+                    <button
+                        class="bg-indigo-500 px-4 py-1 my-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300"
+                        onclick="loadPage('softwares-location')">Locate or download tools</button>
+
+                    <button
+                        class="bg-indigo-500 px-4 py-1 my-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300"
+                        onclick="loadPage('roms-location')">Locate ROMs</button>
+
+                    <button
+                        class="bg-indigo-500 px-4 py-1 my-1 text-white font-semibold rounded-full border-2 border-indigo-500 transition ease-in-out duration-250 hover:bg-transparent hover:text-indigo-300"
+                        onclick="loadPage('settings')">Open settings</button>
+                </div>
+            </div>
+
+            <div class="flex justify-center mt-8">
+                <button
+                    class="bg-green-600 px-16 py-4 text-4xl text-white font-semibold rounded-full border-2 border-green-600 transition ease-in-out duration-250 hover:bg-transparent hover:text-green-300"
+                    onclick="loadPage('settings')">Start a run !</button>
+            </div>
+
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>

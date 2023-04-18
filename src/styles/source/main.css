@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#step-1.missing-files #step-1-missing-files {
+    display: block;
+}
+
+#step-1.step-valid #step-1-valid {
+    display: block;
+}
+
+#step-2.missing-files #step-2-missing-files {
+    display: block;
+}
+
+#step-2.step-valid #step-2-valid {
+    display: block;
+}
