@@ -32,6 +32,7 @@ function _setInitialRomValue(rom, newValue) {
 
 	setRomLabelValue(rom, newValue);
 	updateWizardComponentsStates();
+	updateRomButtons();
 }
 
 function setRom(rom, e) {
@@ -42,6 +43,7 @@ function setRom(rom, e) {
 	window.electronAPI.setRom(rom, newValue);
 
 	updateWizardComponentsStates();
+	updateRomButtons();
 }
 
 function getRom(rom) {
