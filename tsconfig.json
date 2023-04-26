@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "baseUrl": "src/app/",
+        "esModuleInterop": true,
+        "jsx": "react-jsx",
+        "module": "NodeNext",
+        "paths": {
+            "@atoms/*": [
+                "atoms/*"
+            ],
+            "@constants": [
+                "dataManager/Constants"
+            ],
+            "@dataManager": [
+                "dataManager/index"
+            ],
+            "@pages/*": [
+                "pages/*"
+            ]
+        }
+    }
+}

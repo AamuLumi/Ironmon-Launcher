@@ -16,6 +16,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	},
 
 	download: (key, url) => ipcRenderer.send('download', key, url),
+	loadSetup: () => ipcRenderer.send('started'),
+	openExternalURL: (url) => ipcRenderer.send('open-external-url', url),
+	openInAnotherWindowURL: (url) => ipcRenderer.send('open-another-window-url', url),
+	setMemory: (memory) => ipcRenderer.send('set-memory', memory),
 	setLocation: (key, value) => ipcRenderer.send('set-location', key, value),
 	setRom: (key, value) => ipcRenderer.send('set-rom', key, value),
 });
@@ -39,5 +43,4 @@ window.addEventListener('DOMContentLoaded', () => {
 	ipcRenderer.on('location-change', (event, key, value) => {
 		locationListeners.forEach((f) => f(key, value));
 	});
-	ipcRenderer.send('started');
 });
